@@ -4,22 +4,27 @@ services:
   web:
     build: 
       dockerfile: ./web/Dockerfile
-    image: 127.0.0.1:5000/web:latest
+    image: 127.0.0.1:5000/web:v2
     ports:
       - "8091:80"
     depends_on:
       - db
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 5
+    networks:
+      - crud_backend
 
   db:
-    build: 
+    build:
       dockerfile : ./db/Dockerfile
-    image: 127.0.0.1:5000/db:latest
+    image: 127.0.0.1:5000/db:v2
     deploy:
       placement:
         constraints:
-          - node.labels.type == pb-manager
+          - node.hostname == pb-manager
+    networks:
+      - crud_backend
 
   pma:
     image: phpmyadmin/phpmyadmin:latest
@@ -33,7 +38,16 @@ services:
     deploy:
       placement:
         constraints:
-          - node.labels.type == pb-node1
+          - node.hostname == pb-node1
+    networks:
+      - crud_backend
 
 volumes:
   db_data:
+
+networks:
+  crud_backend:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24

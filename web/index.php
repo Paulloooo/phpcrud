@@ -23,6 +23,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="mt-5 mb-3 d-flex justify-content-between">
+			<p>Nom d'hôte du serveur : <?php echo gethostname(); ?></p>
                         <h2 class="pull-left">Liste des étudiants</h2>
                         <a href="create.php" class="btn btn-success"><i class="bi bi-plus"></i> Ajouter</a>
                     </div>
