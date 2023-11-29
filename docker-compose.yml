@@ -2,29 +2,22 @@ version: '3'
 
 services:
   web:
-    build: 127.0.0.1:5000/web:latest
+    build: 
+      dockerfile: ./web/Dockerfile
+    image: 127.0.0.1:5000/web:latest
     ports:
       - "8091:80"
-    volumes:
-      - ./config/apache:/etc/apache2/sites-available
     depends_on:
       - db
     deploy:
       mode: global
 
   db:
-    build: 127.0.0.1:5000/db:latest
-    image: mariadb:latest
-    volumes:
-      - ./db/database.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: phpcrud
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
+    build: 
+      dockerfile : ./db/Dockerfile
+    image: 127.0.0.1:5000/db:latest
 
   pma:
-    build: 127.0.0.1:5000/pma:latest
     image: phpmyadmin/phpmyadmin:latest
     environment:
       PMA_HOST: db
