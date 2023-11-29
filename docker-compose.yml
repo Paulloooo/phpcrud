@@ -6,7 +6,6 @@ services:
     ports:
       - "8091:80"
     volumes:
-      - ./web:/var/www/html
       - ./config/apache:/etc/apache2/sites-available
     depends_on:
       - db
@@ -17,7 +16,6 @@ services:
     build: 127.0.0.1:5000/db:latest
     image: mariadb:latest
     volumes:
-      - db_data:/var/lib/mysql
       - ./db/database.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       MYSQL_ROOT_PASSWORD: password
