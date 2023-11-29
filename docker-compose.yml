@@ -19,7 +19,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.labels.type == pb-manager
+          - node.hostname == pb-manager
 
   pma:
     image: phpmyadmin/phpmyadmin:latest
@@ -33,7 +33,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.labels.type == pb-node1
+          - node.hostname == pb-node1
 
 volumes:
   db_data:
