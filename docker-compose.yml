@@ -16,6 +16,10 @@ services:
     build: 
       dockerfile : ./db/Dockerfile
     image: 127.0.0.1:5000/db:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type == pb-manager
 
   pma:
     image: phpmyadmin/phpmyadmin:latest
@@ -26,6 +30,10 @@ services:
       - "8151:80"
     depends_on:
       - db
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type == pb-node1
 
 volumes:
   db_data:
