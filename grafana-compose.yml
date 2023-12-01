@@ -1,47 +1,6 @@
 version: '3'
 
 services:
-  web:
-    build:
-      dockerfile: ./web/Dockerfile
-    image: 127.0.0.1:5000/web:v2
-    ports:
-      - "8091:80"
-    depends_on:
-      - db
-    deploy:
-      mode: replicated
-      replicas: 5
-    networks:
-      - crud_backend
-
-  db:
-    build:
-      dockerfile: ./db/Dockerfile
-    image: 127.0.0.1:5000/db:v2
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == pb-manager
-    networks:
-      - crud_backend
-
-  pma:
-    image: phpmyadmin/phpmyadmin:latest
-    environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: pass
-    ports:
-      - "8151:80"
-    depends_on:
-      - db
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == pb-node1
-    networks:
-      - crud_backend
-
   grafana:
     image: grafana/grafana:latest  # Utilisation de l'image officielle de Grafana
     ports:
@@ -55,10 +14,29 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana  # Montage du volume pour les données persistantes
 
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == pb-manager
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - crud_backend
+
+
 volumes:
   grafana_data:
     driver: local
-  db_data:
+  prometheus_data:
 
 networks:
   crud_backend:

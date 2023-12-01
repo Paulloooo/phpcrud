@@ -36,19 +36,6 @@ services:
         constraints:
           - node.hostname == pb-node1
 
-  grafana:
-    build: 
-      dockerfile : ./grafana/Dockerfile
-    image: 127.0.0.1:5000/grafana:latest
-    ports:
-      - "3000:3000"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == pb-manager
-
 volumes:
-  grafana_data:
-    driver: local
   db_data:
 
