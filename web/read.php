@@ -63,6 +63,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
     </style>
 </head>
 <body>
+    <p>Nom d'hôte du serveur : <?php echo gethostname(); ?></p>
     <div class="wrapper">
         <div class="container-fluid">
             <div class="row">

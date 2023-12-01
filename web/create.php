@@ -86,10 +86,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <div class="wrapper">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12>
+		    <p>Nom d'hôte du serveur : <?php echo gethostname(); ?></p>
                     <h2 class="mt-5">Créer un enregistrement</h2>
                     <p>Remplir le formulaire pour enregistrer l'étudiant dans la base de données</p>
-
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="form-group">
                             <label>Nom</label>

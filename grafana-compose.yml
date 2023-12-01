@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana:latest  # Utilisation de l'image officielle de Grafana
+    ports:
+      - "3000:3000"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == pb-manager
+    networks:
+      - crud_backend
+    volumes:
+      - grafana_data:/var/lib/grafana  # Montage du volume pour les données persistantes
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == pb-manager
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - crud_backend
+
+
+volumes:
+  grafana_data:
+    driver: local
+  prometheus_data:
+
+networks:
+  crud_backend:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 10.0.60.0/24

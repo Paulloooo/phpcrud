@@ -2,20 +2,21 @@ version: '3'
 
 services:
   web:
-    build: 
+    build:
       dockerfile: ./web/Dockerfile
-    image: 127.0.0.1:5000/web:latest
+    image: 127.0.0.1:5000/web:v2
     ports:
       - "8091:80"
     depends_on:
       - db
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 5
 
   db:
-    build: 
+    build:
       dockerfile : ./db/Dockerfile
-    image: 127.0.0.1:5000/db:latest
+    image: 127.0.0.1:5000/db:v2
     deploy:
       placement:
         constraints:
@@ -37,3 +38,4 @@ services:
 
 volumes:
   db_data:
+
