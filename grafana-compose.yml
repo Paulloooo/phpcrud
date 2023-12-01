@@ -12,15 +12,19 @@ services:
     deploy:
       mode: replicated
       replicas: 5
+    networks:
+      - crud_backend
 
   db:
     build:
-      dockerfile : ./db/Dockerfile
+      dockerfile: ./db/Dockerfile
     image: 127.0.0.1:5000/db:v2
     deploy:
       placement:
         constraints:
           - node.hostname == pb-manager
+    networks:
+      - crud_backend
 
   pma:
     image: phpmyadmin/phpmyadmin:latest
@@ -35,20 +39,30 @@ services:
       placement:
         constraints:
           - node.hostname == pb-node1
+    networks:
+      - crud_backend
 
   grafana:
-    build: 
-      dockerfile : ./grafana/Dockerfile
-    image: 127.0.0.1:5000/grafana:latest
+    image: grafana/grafana:latest  # Utilisation de l'image officielle de Grafana
     ports:
       - "3000:3000"
     deploy:
       placement:
         constraints:
           - node.hostname == pb-manager
+    networks:
+      - crud_backend
+    volumes:
+      - grafana_data:/var/lib/grafana  # Montage du volume pour les données persistantes
 
 volumes:
   grafana_data:
     driver: local
   db_data:
 
+networks:
+  crud_backend:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 10.0.60.0/24
